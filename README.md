@@ -122,10 +122,10 @@ $$R_t = R_{\text{progreso}} + R_{\text{tiempo}} + R_{\text{orientacion}} + R_{\t
   $$R_{\text{orientacion}} = -0.30 \times |\theta_{\text{goal}}|$$
 
 ### 2. Reward Shaping Reactivo por LiDAR ($R_{\text{shaping}}$):
-Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d_{\text{front}} < 0.30$ ($1.05\text{ metros}$ en métrica real):
+Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d_{\text{front}} < 0.45$ ($1.58\text{ metros}$ en métrica real):
 * **Si el agente ejecuta Avance Recto (`Acción 0`) hacia el obstáculo**:
-  $$R_{\text{shaping}} = -1.5 \times (0.30 - d_{\text{front}})$$
-* **Si el agente ejecuta Giros de Evitación (`Acción 1` o `Acción 2`)**:
+  $$R_{\text{shaping}} = -1.5 \times (0.45 - d_{\text{front}})$$
+* **Si el agente ejecuta Giros de Evitación (`Acción 1, 2, 3` o `4`)**:
   $$R_{\text{shaping}} = +0.30$$
 
 ### 3. Recompensas Terminales ($R_{\text{terminal}}$):
@@ -140,9 +140,9 @@ Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d
 | Métrica del Sistema | Distancia Real en Metros | Valor Normalizado | Interpretación Físico-Robótica |
 | :--- | :---: | :---: | :--- |
 | **Alcance Máximo LiDAR** | $3.50\text{ m}$ | $1.00$ | Límite superior de lectura del sensor láser. |
-| **Inicio de Evitación (Shaping)** | **$1.05\text{ m}$** | **$0.30$** | El sensor activa penalizaciones por avance recto y premia el giro evasivo. |
+| **Inicio de Evitación Anticipada (Shaping)** | **$1.58\text{ m}$** | **$0.45$** | El sensor activa penalizaciones por avance recto e incentiva la iniciación temprana del giro evasivo. |
 | **Umbral de Colisión (Impacto)** | **$0.35\text{ m}$ ($35\text{ cm}$)** | **$0.10$** | Límite de contacto físico. Detiene el episodio y liquida con $-100.0$. |
-| **Margen de Maniobra Libre** | **$0.70\text{ m}$ ($70\text{ cm}$)** | — | Espacio neto para desacelerar y virar antes de colisionar. |
+| **Margen de Maniobra Libre** | **$1.23\text{ m}$** | — | Espacio neto suficiente para iniciar arcos de giro suaves antes de aproximarse al impacto. |
 
 ---
 
