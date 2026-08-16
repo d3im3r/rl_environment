@@ -28,7 +28,8 @@ sudo apt install -y \
     ros-humble-turtlebot3-simulations \
     ros-humble-turtlebot3-description \
     ros-humble-gazebo-ros-pkgs \
-    python3-pip
+    python3-pip \
+    ffmpeg
 
 # 3. Instalación y actualización de herramientas de compilación Python
 echo -e "\n${YELLOW}[3/5] Actualizando herramientas de compilación de Python (setuptools, packaging)...${NC}"

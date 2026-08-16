@@ -232,7 +232,8 @@ sudo apt install -y \
     ros-humble-turtlebot3-simulations \
     ros-humble-turtlebot3-description \
     ros-humble-gazebo-ros-pkgs \
-    python3-pip
+    python3-pip \
+    ffmpeg
 
 # 2. Instalación de PyTorch, herramientas de compilación y librerías de IA
 pip3 install --upgrade setuptools packaging
