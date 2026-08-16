@@ -110,6 +110,12 @@ def generate_launch_description():
         description='Goal placement mode (single, soft, medium, separated).'
     )
 
+    eval_only_arg = DeclareLaunchArgument(
+        'eval_only',
+        default_value='false',
+        description='Whether to run only evaluation without training.'
+    )
+
     world_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(custom_world_launch),
         launch_arguments={
@@ -182,7 +188,8 @@ def generate_launch_description():
             '--epsilon-decay', LaunchConfiguration('epsilon_decay'),
             '--epsilon-start', LaunchConfiguration('epsilon_start'),
             '--resume-checkpoint', LaunchConfiguration('resume_checkpoint'),
-            '--base-dir', LaunchConfiguration('base_dir')
+            '--base-dir', LaunchConfiguration('base_dir'),
+            '--eval-only', LaunchConfiguration('eval_only')
         ]
     )
 
@@ -213,6 +220,7 @@ def generate_launch_description():
         resume_checkpoint_arg,
         epsilon_start_arg,
         goal_mode_arg,
+        eval_only_arg,
         base_dir_arg,
         world_launch,
         rl_interface_node,
