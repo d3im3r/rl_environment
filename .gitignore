@@ -1,3 +1,8 @@
+# Non-RL packages in workspace
+arm_digital_twin/
+d3im3r_bot_bringup/
+my_py_pkg/
+
 # Python / PyTorch / ROS 2 artifacts
 __pycache__/
 *.pyc
