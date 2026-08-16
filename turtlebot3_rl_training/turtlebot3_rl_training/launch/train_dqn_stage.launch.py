@@ -87,7 +87,7 @@ def generate_launch_description():
 
     base_dir_arg = DeclareLaunchArgument(
         'base_dir',
-        default_value='/home/d3im3r/ros2_ws/src/train_runs',
+        default_value=os.path.expanduser('~/ros2_ws/src/train_runs'),
         description='Base directory to save training runs.'
     )
 

@@ -52,7 +52,7 @@ def generate_launch_description():
 
     csv_path_arg = DeclareLaunchArgument(
         'csv_path',
-        default_value='/home/d3im3r/ros2_ws/src/eval_history.csv',
+        default_value=os.path.expanduser('~/ros2_ws/src/eval_history.csv'),
         description='Path to centralized CSV file.'
     )
 
