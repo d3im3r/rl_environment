@@ -379,7 +379,7 @@ Para evaluar un modelo pre-entrenado directamente en Gazebo con **interfaz compl
 ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
     stage:=1 \
     goal_mode:=separated \
-    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_1_medium_2026_08_16_150033/checkpoints/best_model.pth \
+    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_1_medium_2026_08_16_151821/checkpoints/best_model.pth \
     eval_only:=true \
     episodes:=20 \
     gui:=true
