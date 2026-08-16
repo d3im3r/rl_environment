@@ -203,6 +203,27 @@ Cuando se utiliza `resume_checkpoint` para transferir un modelo pre-entrenado:
 
 ### Pasos de Instalación y Compilación del Workspace
 
+#### Opción A: Instalación Automática (Recomendado)
+```bash
+# 1. Crear e ingresar al workspace de ROS 2
+mkdir -p ~/ros2_ws/src
+cd ~/ros2_ws/src
+
+# 2. Clonar el repositorio
+git clone https://github.com/d3im3r/rl_environment.git .
+
+# 3. Ejecutar el script autónomo de instalación de dependencias
+chmod +x install_dependencies.sh
+./install_dependencies.sh
+
+# 4. Compilar y cargar el espacio de trabajo
+cd ~/ros2_ws
+source /opt/ros/humble/setup.bash
+colcon build
+source install/setup.bash
+```
+
+#### Opción B: Instalación Manual Paso a Paso
 ```bash
 # 1. Instalación de dependencias del sistema y TurtleBot3 en ROS 2 Humble
 sudo apt update
@@ -213,7 +234,7 @@ sudo apt install -y \
     ros-humble-gazebo-ros-pkgs \
     python3-pip
 
-# 2. Instalación de PyTorch, herramientas de compilación y librerías de IA (con NumPy 1.x para compatibilidad con ROS 2)
+# 2. Instalación de PyTorch, herramientas de compilación y librerías de IA
 pip3 install --upgrade setuptools packaging
 pip3 install "numpy<2" torch torchvision pandas matplotlib
 
@@ -221,19 +242,10 @@ pip3 install "numpy<2" torch torchvision pandas matplotlib
 echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
 export TURTLEBOT3_MODEL=burger
 
-# 3. Crear e ingresar al workspace de ROS 2
-mkdir -p ~/ros2_ws/src
-cd ~/ros2_ws/src
-
-# 3. Clonar el repositorio
-git clone https://github.com/d3im3r/rl_environment.git .
-
-# 4. Compilar los paquetes con colcon
+# 3. Compilar los paquetes con colcon
 cd ~/ros2_ws
 source /opt/ros/humble/setup.bash
 colcon build
-
-# 5. Cargar el entorno de ROS 2
 source install/setup.bash
 ```
 
