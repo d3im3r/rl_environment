@@ -350,38 +350,45 @@ ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
 
 ---
 
-### Tabla Completa de Argumentos de Entrenamiento
+### Tabla Completa de Argumentos de Entrenamiento y Evaluación
 
 | Argumento | Tipo | Valor Defecto | Valores Recomendados | Descripción Detallada |
 | :--- | :---: | :---: | :---: | :--- |
 | `stage` | `int` | `1` | `1`, `2`, `3`, ..., `7` | Escenario/Mundo de Gazebo a cargar (`d3im3r_stage_XX.world`). |
 | `goal_mode` | `string` | `single` | `single`, `soft`, `medium`, `separated` | Modo de muestreo de metas entre episodios para evitar overfitting. |
+| `eval_only` | `bool` | `false` | `true` (evaluación), `false` (entreno) | **Activa la evaluación determinista pura ($\epsilon = 0.0$) sin actualización de gradientes.** |
+| `episodes` | `int` | `100` | `15`-`30` (eval), `200`-`500` (entreno) | Cantidad total de episodios a ejecutar en la sesión. |
 | `gui` | `bool` | `true` | `true` (debug visual), `false` (rápido) | Activa u oculta la interfaz gráfica de Gazebo Classic. |
-| `episodes` | `int` | `120` | `200` a `500` | Cantidad total de episodios a entrenar en la sesión. |
-| `max_steps` | `int` | `40` | `80` (Stage 2), `120` (Stage 3+) | Límite máximo de pasos de control antes de declarar TIMEOUT. |
-| `resume_checkpoint` | `string` | `""` | Ruta a `.pth` | Ruta absoluta al modelo `.pth` para reanudar o transferir pesos. |
-| `epsilon_start` | `float` | `1.0` | `0.80` (scratch), `0.30` (fine-tuning) | Tasa inicial de exploración aleatoria ($\epsilon$). |
+| `max_steps` | `int` | `40` | `40` (Stage 1), `80` (Stage 2) | Límite máximo de pasos de control antes de declarar TIMEOUT. |
+| `resume_checkpoint` | `string` | `""` | Ruta a `.pth` | Ruta absoluta al modelo `.pth` para reanudar o evaluar pesos. |
+| `epsilon_start` | `float` | `1.0` | `0.80` (scratch), `0.30` (fine-tuning) | Tasa inicial de exploración aleatoria ($\epsilon$). Ignorado si `eval_only:=true`. |
 | `epsilon_decay` | `float` | `0.995` | `0.995` (200 eps), `0.997` (500 eps) | Factor de decaimiento geométrico por episodio para $\epsilon$. |
 | `epsilon_end` | `float` | `0.05` | `0.05` | Valor mínimo absoluto al que decae la exploración $\epsilon$. |
 | `learning_rate` | `float` | `0.001` | `0.001` (scratch), `0.0003` (fine-tuning) | Tasa de aprendizaje para el optimizador Adam de PyTorch. |
 | `batch_size` | `int` | `64` | `64`, `128` | Tamaño del lote de transiciones extraídas del Replay Buffer. |
-| `eval_every` | `int` | `25` | `25` | Frecuencia (en episodios) para evaluar la política con $\epsilon = 0.0$. |
+| `eval_every` | `int` | `25` | `25` | Frecuencia (en episodios) para evaluar la política durante entrenamiento. |
 | `base_dir` | `string` | `.../train_runs` | Ruta absoluta | Directorio raíz para guardar logs, métricas y checkpoints. |
 
 ---
 
-### 🔍 Evaluación Directa de Políticas (`evaluate_dqn_ros`)
+### 🔍 Evaluación Determinista Directa vía Launch (`eval_only:=true`)
 
-Para evaluar un modelo pre-entrenado directamente sin actualizar gradientes ($\epsilon = 0.0$ determinista), se puede invocar la herramienta `evaluate_dqn_ros`:
+Para evaluar un modelo pre-entrenado directamente en Gazebo con **interfaz completa de ROS 2** y selección determinista ($\epsilon = 0.0$ sin movimientos aleatorios):
 
 ```bash
-ros2 run turtlebot3_rl_training evaluate_dqn_ros \
-    --stage 2 \
-    --goal-mode medium \
-    --resume-checkpoint /home/d3im3r/ros2_ws/src/train_runs/stage_2_medium_2026_08_16_112449/checkpoints/best_model.pth \
-    --episodes 10 \
-    --max-steps 80
+ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
+    stage:=1 \
+    goal_mode:=separated \
+    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_1_medium_2026_08_16_150033/checkpoints/best_model.pth \
+    eval_only:=true \
+    episodes:=20 \
+    gui:=true
 ```
+
+#### 💡 Comportamiento del parámetro `episodes` y Cierre del Sistema:
+* **¿Por qué continúa la ejecución?**: Si no se especifica el parámetro `episodes`, el lanzador por defecto ejecutará 100 episodios continuos para obtener métricas agregadas.
+* **Control de Duración**: Se recomienda pasar `episodes:=15` o `episodes:=20` para que el script evalúe la cantidad deseada de episodios y **cierre Gazebo automáticamente** al terminar.
+* **Detención Manual**: En cualquier momento se puede presionar `Ctrl + C` para detener la sesión. Todos los episodios completados quedan registrados de forma permanente en `metrics.csv`.
 
 ---
 
