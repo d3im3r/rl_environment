@@ -213,7 +213,8 @@ sudo apt install -y \
     ros-humble-gazebo-ros-pkgs \
     python3-pip
 
-# 2. Instalación de PyTorch y librerías de Inteligencia Artificial / Análisis
+# 2. Instalación de PyTorch, herramientas de compilación y librerías de IA
+pip3 install --upgrade setuptools packaging
 pip3 install torch torchvision numpy pandas matplotlib
 
 # Configurar modelo por defecto en bashrc
