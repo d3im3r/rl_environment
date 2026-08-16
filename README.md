@@ -201,21 +201,34 @@ Cuando se utiliza `resume_checkpoint` para transferir un modelo pre-entrenado:
 * **Simulador**: Gazebo Classic 11
 * **Librerías Python**: PyTorch, NumPy, Pandas, Matplotlib
 
-### Pasos de Compilación del Workspace
+### Pasos de Instalación y Compilación del Workspace
+
 ```bash
-# 1. Crear e ingresar al workspace de ROS 2
+# 1. Instalación de dependencias del sistema y TurtleBot3 en ROS 2 Humble
+sudo apt update
+sudo apt install -y \
+    ros-humble-turtlebot3-gazebo \
+    ros-humble-turtlebot3-simulations \
+    ros-humble-turtlebot3-description \
+    ros-humble-gazebo-ros-pkgs
+
+# Configurar modelo por defecto en bashrc
+echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
+export TURTLEBOT3_MODEL=burger
+
+# 2. Crear e ingresar al workspace de ROS 2
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 
-# 2. Clonar el repositorio
+# 3. Clonar el repositorio
 git clone https://github.com/d3im3r/rl_environment.git .
 
-# 3. Compilar los paquetes con colcon
+# 4. Compilar los paquetes con colcon
 cd ~/ros2_ws
 source /opt/ros/humble/setup.bash
-colcon build --packages-select turtlebot3_custom_worlds turtlebot3_rl_training turtlebot3_eval_platform
+colcon build
 
-# 4. Cargar el entorno
+# 5. Cargar el entorno de ROS 2
 source install/setup.bash
 ```
 
