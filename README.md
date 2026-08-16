@@ -111,26 +111,26 @@ Para garantizar un flujo constante y evitar que el robot se detenga frente a par
 
 El retorno por paso de tiempo $R_t$ está definido por la suma de componentes continuos y penalizaciones reactivas de evitación:
 
-$$R_t = R_{\text{progreso}} + R_{\text{tiempo}} + R_{\text{orientación}} + R_{\text{LiDAR\_shaping}} + R_{\text{terminal}}$$
+$$R_t = R_{\text{progreso}} + R_{\text{tiempo}} + R_{\text{orientacion}} + R_{\text{shaping}} + R_{\text{terminal}}$$
 
 ### 1. Componentes Continuos de Navegación:
 * **Progreso a la Meta**: Premio proporcional a la distancia recorrida en dirección a la meta:
-  $$R_{\text{progreso}} = 12.0 \times (d_{\text{goal\_prev}} - d_{\text{goal\_current}})$$
+  $$R_{\text{progreso}} = 12.0 \times (d_{\text{goal,prev}} - d_{\text{goal,current}})$$
 * **Penalización por Tiempo (Step Penalty)**: Costo fijo por paso para favorecer rutas cortas:
   $$R_{\text{tiempo}} = -0.40$$
 * **Alineación Angular**: Recompensa por mantener el frente orientado hacia la meta:
-  $$R_{\text{orientación}} = -0.30 \times |\theta_{\text{goal}}|$$
+  $$R_{\text{orientacion}} = -0.30 \times |\theta_{\text{goal}}|$$
 
-### 2. Reward Shaping Reactivo por LiDAR ($R_{\text{LiDAR\_shaping}}$):
+### 2. Reward Shaping Reactivo por LiDAR ($R_{\text{shaping}}$):
 Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d_{\text{front}} < 0.30$ ($1.05\text{ metros}$ en métrica real):
 * **Si el agente ejecuta Avance Recto (`Acción 0`) hacia el obstáculo**:
-  $$R_{\text{LiDAR\_shaping}} = -1.5 \times (0.30 - d_{\text{front}})$$
+  $$R_{\text{shaping}} = -1.5 \times (0.30 - d_{\text{front}})$$
 * **Si el agente ejecuta Giros de Evitación (`Acción 1` o `Acción 2`)**:
-  $$R_{\text{LiDAR\_shaping}} = +0.30 \quad (\text{y queda eximido de la penalización por giro})$$
+  $$R_{\text{shaping}} = +0.30$$
 
 ### 3. Recompensas Terminales ($R_{\text{terminal}}$):
 * **Éxito (Llegada a Meta, $d_{\text{goal}} \le 0.25\text{ m}$)**: $+\mathbf{150.0}$
-* **Colisión ($d_{\text{láser}} \le 0.35\text{ m}$)**: $-\mathbf{100.0}$
+* **Colisión ($d_{\text{laser}} \le 0.35\text{ m}$)**: $-\mathbf{100.0}$
 * **Timeout ($t \ge \text{max\_steps}$)**: $-\mathbf{80.0}$
 
 ---
