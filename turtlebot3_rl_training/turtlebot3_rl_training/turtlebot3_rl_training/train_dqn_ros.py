@@ -663,6 +663,7 @@ def evaluate_policy(
     episode_id,
     stage,
     run_dirs,
+    action_dim=5,
     eval_episodes=3,
     max_steps=40,
     save_videos=True,
@@ -720,7 +721,7 @@ def evaluate_policy(
                     q_network=q_network,
                     state=state,
                     epsilon=0.0,
-                    action_dim=3,
+                    action_dim=action_dim,
                     device=device
                 )
 
@@ -1183,6 +1184,7 @@ def main():
                     episode_id=episode,
                     stage=stage,
                     run_dirs=run_dirs,
+                    action_dim=action_dim,
                     eval_episodes=args.eval_episodes,
                     max_steps=max_steps,
                     save_videos=args.save_videos,

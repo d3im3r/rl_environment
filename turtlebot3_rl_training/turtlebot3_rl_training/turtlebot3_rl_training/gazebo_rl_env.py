@@ -259,6 +259,7 @@ class GazeboTurtleBot3Env(Node):
         raise RuntimeError('ROS interrupted while waiting for /rl_state.')
 
     def wait_for_odom(self) -> Odometry:
+        self.odom_msg = None
         start_time = time.time()
 
         while rclpy.ok():
