@@ -131,7 +131,7 @@ Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d
 ### 3. Recompensas Terminales ($R_{\text{terminal}}$):
 * **Éxito (Llegada a Meta, $d_{\text{goal}} \le 0.25\text{ m}$)**: $+\mathbf{150.0}$
 * **Colisión ($d_{\text{laser}} \le 0.35\text{ m}$)**: $-\mathbf{100.0}$
-* **Timeout ($t \ge \text{max\_steps}$)**: $-\mathbf{80.0}$
+* **Timeout ($t \ge t_{\text{max}}$)**: $-\mathbf{80.0}$
 
 ---
 
@@ -148,7 +148,7 @@ Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d
 
 ## 🎯 Modos de Metas Dinámicas (`goal_mode`)
 
-El argumento `goal_mode` controla cómo se seleccionan las coordenadas de la meta $(\text{x}_{\text{goal}}, \text{y}_{\text{goal}})$ al inicio de cada episodio:
+El argumento `goal_mode` controla cómo se seleccionan las coordenadas de la meta $(x_{\text{goal}}, y_{\text{goal}})$ al inicio de cada episodio:
 
 ```text
                      [ MODO MEDIUM EN STAGE 2 ]
