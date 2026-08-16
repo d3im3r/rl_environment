@@ -213,9 +213,9 @@ sudo apt install -y \
     ros-humble-gazebo-ros-pkgs \
     python3-pip
 
-# 2. Instalación de PyTorch, herramientas de compilación y librerías de IA
+# 2. Instalación de PyTorch, herramientas de compilación y librerías de IA (con NumPy 1.x para compatibilidad con ROS 2)
 pip3 install --upgrade setuptools packaging
-pip3 install torch torchvision numpy pandas matplotlib
+pip3 install "numpy<2" torch torchvision pandas matplotlib
 
 # Configurar modelo por defecto en bashrc
 echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
