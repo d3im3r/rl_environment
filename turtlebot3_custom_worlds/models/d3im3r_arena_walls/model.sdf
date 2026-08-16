@@ -1,0 +1,116 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <model name="d3im3r_arena_walls">
+        <static>true</static>
+
+        <!--
+            Arena limits:
+            x: -2.0 to 2.0
+            y: -2.0 to 2.0
+
+            Wall thickness: 0.10 m
+            Wall height:    0.50 m
+        -->
+
+        <!-- North wall: y = +2.0 -->
+        <link name="north_wall">
+            <pose>0 2.05 0.25 0 0 0</pose>
+
+            <collision name="collision">
+                <geometry>
+                    <box>
+                        <size>4.2 0.10 0.50</size>
+                    </box>
+                </geometry>
+            </collision>
+
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>4.2 0.10 0.50</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.12 0.12 0.12 1</ambient>
+                    <diffuse>0.12 0.12 0.12 1</diffuse>
+                </material>
+            </visual>
+        </link>
+
+        <!-- South wall: y = -2.0 -->
+        <link name="south_wall">
+            <pose>0 -2.05 0.25 0 0 0</pose>
+
+            <collision name="collision">
+                <geometry>
+                    <box>
+                        <size>4.2 0.10 0.50</size>
+                    </box>
+                </geometry>
+            </collision>
+
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>4.2 0.10 0.50</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.12 0.12 0.12 1</ambient>
+                    <diffuse>0.12 0.12 0.12 1</diffuse>
+                </material>
+            </visual>
+        </link>
+
+        <!-- East wall: x = +2.0 -->
+        <link name="east_wall">
+            <pose>2.05 0 0.25 0 0 0</pose>
+
+            <collision name="collision">
+                <geometry>
+                    <box>
+                        <size>0.10 4.2 0.50</size>
+                    </box>
+                </geometry>
+            </collision>
+
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>0.10 4.2 0.50</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.12 0.12 0.12 1</ambient>
+                    <diffuse>0.12 0.12 0.12 1</diffuse>
+                </material>
+            </visual>
+        </link>
+
+        <!-- West wall: x = -2.0 -->
+        <link name="west_wall">
+            <pose>-2.05 0 0.25 0 0 0</pose>
+
+            <collision name="collision">
+                <geometry>
+                    <box>
+                        <size>0.10 4.2 0.50</size>
+                    </box>
+                </geometry>
+            </collision>
+
+            <visual name="visual">
+                <geometry>
+                    <box>
+                        <size>0.10 4.2 0.50</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.12 0.12 0.12 1</ambient>
+                    <diffuse>0.12 0.12 0.12 1</diffuse>
+                </material>
+            </visual>
+        </link>
+
+    </model>
+</sdf>

@@ -1,0 +1,35 @@
+world:
+  name: "d3im3r_stage_02_front_obstacle"
+  description: "Single frontal obstacle between robot and goal."
+
+robot_start:
+  x: -1.5
+  y: 0.0
+  yaw: 0.0
+
+goal:
+  x: 1.5
+  y: 0.0
+  tolerance: 0.18
+
+limits:
+  x_min: -2.0
+  x_max: 2.0
+  y_min: -2.0
+  y_max: 2.0
+
+rl:
+  max_sensor_range: 3.5
+  max_goal_distance: 4.0
+  action_space:
+    0: "forward"
+    1: "turn_left"
+    2: "turn_right"
+
+obstacles:
+  - name: "front_obstacle"
+    type: "box"
+    x: 0.0
+    y: 0.0
+    size_x: 0.45
+    size_y: 0.45

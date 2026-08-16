@@ -1,0 +1,22 @@
+{
+    "training_id": "stage_1_soft_2026_06_02_203604",
+    "scenario_name": "",
+    "scenario_config": "",
+    "scenario_copy": "",
+    "stage": 1,
+    "goal_mode": "soft",
+    "best_score": 335.1333210133183,
+    "episodes_requested": 80,
+    "episodes_completed": 80,
+    "run_dir": "/home/d3im3r/ros2_ws/src/turtlebot3_rl_training/training_runs/stage_1_soft_2026_06_02_203604",
+    "record_bags": false,
+    "save_videos": true,
+    "save_gif": false,
+    "resume_checkpoint": "/home/d3im3r/ros2_ws/src/turtlebot3_rl_training/training_runs/stage_1_single_2026_06_01_185535/checkpoints/best_model.pth",
+    "load_optimizer": false,
+    "sync_target_on_resume": true,
+    "eval_only": false,
+    "postprocess_completed": true,
+    "plots_generated": true,
+    "videos_checked": true
+}

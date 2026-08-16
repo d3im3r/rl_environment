@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <model name="d3im3r_goal_marker">
+        <static>true</static>
+
+        <link name="goal_link">
+            <visual name="goal_visual">
+                <pose>0 0 0.01 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <radius>0.18</radius>
+                        <length>0.02</length>
+                    </cylinder>
+                </geometry>
+                <material>
+                    <ambient>0.0 1.0 0.0 1.0</ambient>
+                    <diffuse>0.0 1.0 0.0 1.0</diffuse>
+                </material>
+            </visual>
+
+            <collision name="goal_collision">
+                <pose>0 0 0.01 0 0 0</pose>
+                <geometry>
+                    <cylinder>
+                        <radius>0.18</radius>
+                        <length>0.02</length>
+                    </cylinder>
+                </geometry>
+            </collision>
+        </link>
+    </model>
+</sdf>

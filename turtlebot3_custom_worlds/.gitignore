@@ -1,0 +1,62 @@
+# ROS 2 / colcon build artifacts
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Python virtual environments
+venv/
+.env/
+.venv/
+
+# Gazebo temporary files
+*.log
+*.bak
+*.tmp
+*.swp
+*.swo
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.code-workspace
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+
+# Colcon metadata
+.colcon/
+.colcon_install_layout
+
+# ROS test results
+test_results/
+
+# Coverage files
+.coverage
+htmlcov/
+
+# Local environment files
+*.env
+.env.*
+
+# Large simulation outputs
+*.bag
+*.db3
+*.mcap
+*.mp4
+*.avi
+*.gif
+
+# Temporary notebooks checkpoints
+.ipynb_checkpoints/

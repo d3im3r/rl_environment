@@ -1,0 +1,338 @@
+<?xml version="1.0"?>
+<sdf version="1.6">
+    <model name="d3im3r_grid">
+        <static>true</static>
+
+        <!--
+            d3im3r_grid
+            - Grid size: 10 m x 10 m
+            - Grid spacing: 1 m
+            - Positive X axis: red
+            - Positive Y axis: green
+            - Negative axes remain as normal grid lines
+        -->
+
+        <!-- Lines parallel to X axis: y = constant -->
+        <link name="grid_x">
+            <visual name="x_-5">
+                <pose>0 -5 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_-4">
+                <pose>0 -4 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_-3">
+                <pose>0 -3 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_-2">
+                <pose>0 -2 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_-1">
+                <pose>0 -1 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <!-- Positive X axis: from x = 0 to x = 5, y = 0 -->
+            <visual name="positive_x_axis">
+                <pose>2.5 0 0.008 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>5 0.030 0.004</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.8 0.0 0.0 1</ambient>
+                    <diffuse>0.8 0.0 0.0 1</diffuse>
+                </material>
+            </visual>
+
+            <!-- Negative side of y = 0 remains as a normal grid line -->
+            <visual name="negative_x_axis_grid">
+                <pose>-2.5 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>5 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_1">
+                <pose>0 1 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_2">
+                <pose>0 2 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_3">
+                <pose>0 3 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_4">
+                <pose>0 4 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="x_5">
+                <pose>0 5 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>10 0.015 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+        </link>
+
+        <!-- Lines parallel to Y axis: x = constant -->
+        <link name="grid_y">
+            <visual name="y_-5">
+                <pose>-5 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_-4">
+                <pose>-4 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_-3">
+                <pose>-3 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_-2">
+                <pose>-2 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_-1">
+                <pose>-1 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <!-- Positive Y axis: from y = 0 to y = 5, x = 0 -->
+            <visual name="positive_y_axis">
+                <pose>0 2.5 0.008 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.030 5 0.004</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.0 0.8 0.0 1</ambient>
+                    <diffuse>0.0 0.8 0.0 1</diffuse>
+                </material>
+            </visual>
+
+            <!-- Negative side of x = 0 remains as a normal grid line -->
+            <visual name="negative_y_axis_grid">
+                <pose>0 -2.5 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 5 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_1">
+                <pose>1 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_2">
+                <pose>2 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_3">
+                <pose>3 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_4">
+                <pose>4 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+
+            <visual name="y_5">
+                <pose>5 0 0.006 0 0 0</pose>
+                <geometry>
+                    <box>
+                        <size>0.015 10 0.002</size>
+                    </box>
+                </geometry>
+                <material>
+                    <ambient>0.05 0.05 0.05 1</ambient>
+                    <diffuse>0.05 0.05 0.05 1</diffuse>
+                </material>
+            </visual>
+        </link>
+
+    </model>
+</sdf>

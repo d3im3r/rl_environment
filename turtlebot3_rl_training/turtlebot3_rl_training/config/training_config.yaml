@@ -1,0 +1,46 @@
+training:
+  episodes: 300
+  max_steps: 80
+  batch_size: 64
+  gamma: 0.99
+  learning_rate: 0.001
+  buffer_capacity: 20000
+  min_buffer_size: 500
+  target_update_every: 25
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.995
+  eval_every: 25
+  eval_episodes: 5
+  seed: 42
+
+environment:
+  state_dim: 5
+  action_dim: 3
+  max_sensor_range: 3.5
+  max_goal_distance: 5.0
+  goal_tolerance: 0.18
+  collision_distance: 0.16
+
+reward:
+  progress_gain: 8.0
+  step_penalty: 0.05
+  heading_penalty: 0.10
+  stagnation_penalty: 0.20
+  backward_penalty: 0.50
+  collision: -100.0
+  goal: 150.0
+
+ros:
+  rl_state_topic: "/rl_state"
+  rl_action_topic: "/rl_action"
+  rl_goal_reached_topic: "/rl_goal_reached"
+  odom_topic: "/odom"
+  cmd_vel_topic: "/cmd_vel"
+
+output:
+  base_dir: "training_runs"
+  run_prefix: "run"
+  save_gif: true
+  save_mp4: true
+  video_fps: 8

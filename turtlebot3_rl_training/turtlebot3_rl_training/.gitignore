@@ -1,0 +1,39 @@
+# ROS 2 / colcon
+build/
+install/
+log/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Virtual environments
+venv/
+.env/
+.venv/
+
+# Training outputs
+training_runs/
+*.pth
+*.pt
+*.onnx
+*.mp4
+*.gif
+*.avi
+*.bag
+*.db3
+*.mcap
+
+# Matplotlib / cache
+.cache/
+
+# Editor
+.vscode/
+.idea/
+*.code-workspace
+
+# OS
+.DS_Store
+Thumbs.db

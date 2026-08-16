@@ -1,0 +1,47 @@
+scenario_name: stage_1_medium
+description: "Stage 1 con metas laterales intermedias antes de pasar a separated."
+
+stage: 1
+goal_mode: medium
+
+max_steps: 80
+action_timeout: 5.0
+max_goal_distance: 5.0
+goal_tolerance_norm: 0.03
+collision_distance_norm: 0.10
+
+goals:
+  - x: 1.5
+    y: 0.0
+    label: front_goal
+
+  - x: 1.4
+    y: 0.55
+    label: medium_left_goal
+
+  - x: 1.4
+    y: -0.55
+    label: medium_right_goal
+
+robot_starts:
+  - x: -1.5
+    y: 0.0
+    yaw: 0.0
+    label: center_start
+
+reward:
+  progress_gain: 12.0
+  step_penalty: 0.05
+  heading_penalty: 0.05
+  turn_penalty: 0.03
+  unnecessary_turn_penalty: 0.0
+  forward_aligned_bonus: 0.0
+  alignment_gain: 0.0
+  oscillation_penalty: 0.0
+  backward_penalty: 0.20
+  goal: 150.0
+  collision: -100.0
+
+thresholds:
+  aligned: 0.08
+  bad_heading: 0.25

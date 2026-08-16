@@ -1,0 +1,21 @@
+Training Metrics Summary
+========================
+
+Total episodes: 60
+Last episode reward: -174.5249
+Last episode steps: 15
+Last epsilon: 0.0668
+Last average loss: 5.461106
+
+Last 10 episodes:
+Mean reward: -133.2273
+Success rate: 0.1000
+Collision rate: 0.9000
+Timeout rate: 0.0000
+
+Last evaluation:
+Episode: 50
+Eval average reward: 97.2316
+Eval success rate: 0.6667
+Eval collision rate: 0.3333
+Eval average steps: 37.0000

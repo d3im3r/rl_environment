@@ -1,0 +1,313 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="arm_digital_twin">
+
+  <!-- ===================== PROPIEDADES ===================== -->
+
+  <!-- Base -->
+  <xacro:property name="H_BASE" value="0.30"/>
+  <xacro:property name="R_BASE" value="0.05"/>
+
+  <xacro:property name="H_TURRET" value="0.04"/>
+  <xacro:property name="R_TURRET" value="0.04"/>
+
+  <!-- Links -->
+  <xacro:property name="L1" value="0.35"/>
+  <xacro:property name="L2" value="0.30"/>
+  <xacro:property name="W"  value="0.05"/>
+
+  <!-- Gripper -->
+  <xacro:property name="GRIP_LEN" value="0.10"/>
+  <xacro:property name="GRIP_W"   value="0.01"/>
+
+  <!-- Hombro al final del cilindro base -->
+  <xacro:property name="Z_SHOULDER" value="${H_BASE}"/>
+
+  <!-- Materiales -->
+  <material name="Red">
+    <color rgba="0.80 0.10 0.10 1.0"/>
+  </material>
+
+  <material name="Blue">
+    <color rgba="0.10 0.40 0.90 1.0"/>
+  </material>
+
+  <material name="Gray">
+    <color rgba="0.60 0.60 0.60 1.0"/>
+  </material>
+
+  <!-- ===================== BASE ===================== -->
+
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <cylinder radius="${R_BASE}" length="${H_BASE}"/>
+      </geometry>
+      <origin xyz="0 0 ${H_BASE/2}" rpy="0 0 0"/>
+      <material name="Red"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${R_BASE}" length="${H_BASE}"/>
+      </geometry>
+      <origin xyz="0 0 ${H_BASE/2}" rpy="0 0 0"/>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 ${H_BASE/2}" rpy="0 0 0"/>
+      <mass value="6.0"/>
+      <inertia
+        ixx="0.04625" ixy="0.0" ixz="0.0"
+        iyy="0.04625" iyz="0.0"
+        izz="0.00750"/>
+    </inertial>
+  </link>
+
+  <link name="base_rot">
+    <visual>
+      <geometry>
+        <cylinder radius="${R_TURRET}" length="${H_TURRET}"/>
+      </geometry>
+      <origin xyz="0 0 ${H_BASE + H_TURRET/2}" rpy="0 0 0"/>
+      <material name="Gray"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${R_TURRET}" length="${H_TURRET}"/>
+      </geometry>
+      <origin xyz="0 0 ${H_BASE + H_TURRET/2}" rpy="0 0 0"/>
+    </collision>
+
+    <inertial>
+      <origin xyz="0 0 ${H_BASE + H_TURRET/2}" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia
+        ixx="0.00053" ixy="0.0" ixz="0.0"
+        iyy="0.00053" iyz="0.0"
+        izz="0.00080"/>
+    </inertial>
+  </link>
+
+  <joint name="joint1" type="revolute">
+    <parent link="base_link"/>
+    <child link="base_rot"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 0 1"/>
+    <limit lower="-2.96705972839" upper="2.96705972839" effort="10.0" velocity="2.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+  </joint>
+
+  <!-- ===================== LINK1 ===================== -->
+
+  <link name="link1">
+    <visual>
+      <geometry>
+        <box size="${L1} ${W} ${W}"/>
+      </geometry>
+      <origin xyz="${L1/2} 0 0" rpy="0 0 0"/>
+      <material name="Blue"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${L1} ${W} ${W}"/>
+      </geometry>
+      <origin xyz="${L1/2} 0 0" rpy="0 0 0"/>
+    </collision>
+
+    <inertial>
+      <origin xyz="${L1/2} 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia
+        ixx="0.00042" ixy="0.0" ixz="0.0"
+        iyy="0.01042" iyz="0.0"
+        izz="0.01042"/>
+    </inertial>
+  </link>
+
+  <joint name="joint2" type="revolute">
+    <parent link="base_rot"/>
+    <child link="link1"/>
+    <origin xyz="0 0 ${Z_SHOULDER}" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57079632679" upper="1.57079632679" effort="10.0" velocity="2.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+  </joint>
+
+  <!-- ===================== LINK2 ===================== -->
+
+  <link name="link2">
+    <visual>
+      <geometry>
+        <box size="${L2} ${W} ${W}"/>
+      </geometry>
+      <origin xyz="${L2/2} 0 0" rpy="0 0 0"/>
+      <material name="Blue"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${L2} ${W} ${W}"/>
+      </geometry>
+      <origin xyz="${L2/2} 0 0" rpy="0 0 0"/>
+    </collision>
+
+    <inertial>
+      <origin xyz="${L2/2} 0 0" rpy="0 0 0"/>
+      <mass value="0.8"/>
+      <inertia
+        ixx="0.00032" ixy="0.0" ixz="0.0"
+        iyy="0.00672" iyz="0.0"
+        izz="0.00672"/>
+    </inertial>
+  </link>
+
+  <joint name="joint3" type="revolute">
+    <parent link="link1"/>
+    <child link="link2"/>
+    <origin xyz="${L1} 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="-1.57079632679" upper="1.57079632679" effort="10.0" velocity="2.0"/>
+    <dynamics damping="0.5" friction="0.1"/>
+  </joint>
+
+  <!-- ===================== GRIPPER ===================== -->
+
+  <link name="gripper_base">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.01"/>
+      <inertia
+        ixx="0.000001" ixy="0.0" ixz="0.0"
+        iyy="0.000001" iyz="0.0"
+        izz="0.000001"/>
+    </inertial>
+  </link>
+
+  <joint name="gripper_mount" type="fixed">
+    <parent link="link2"/>
+    <child link="gripper_base"/>
+    <origin xyz="${L2} 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <!-- Dedo izquierdo -->
+  <link name="finger_left">
+    <visual>
+      <geometry>
+        <box size="${GRIP_LEN} ${GRIP_W} ${GRIP_W}"/>
+      </geometry>
+      <origin xyz="${GRIP_LEN/2} 0 0" rpy="0 0 0"/>
+      <material name="Gray"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${GRIP_LEN} ${GRIP_W} ${GRIP_W}"/>
+      </geometry>
+      <origin xyz="${GRIP_LEN/2} 0 0" rpy="0 0 0"/>
+    </collision>
+
+    <inertial>
+      <origin xyz="${GRIP_LEN/2} 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia
+        ixx="0.0000033" ixy="0.0" ixz="0.0"
+        iyy="0.0000433" iyz="0.0"
+        izz="0.0000433"/>
+    </inertial>
+  </link>
+
+  <joint name="gripper_joint" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="finger_left"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+    <limit lower="0.0" upper="0.04" effort="10" velocity="0.2"/>
+    <dynamics damping="0.5" friction="0.1"/>
+  </joint>
+
+  <!-- Dedo derecho -->
+  <link name="finger_right">
+    <visual>
+      <geometry>
+        <box size="${GRIP_LEN} ${GRIP_W} ${GRIP_W}"/>
+      </geometry>
+      <origin xyz="${GRIP_LEN/2} 0 0" rpy="0 0 0"/>
+      <material name="Gray"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <box size="${GRIP_LEN} ${GRIP_W} ${GRIP_W}"/>
+      </geometry>
+      <origin xyz="${GRIP_LEN/2} 0 0" rpy="0 0 0"/>
+    </collision>
+
+    <inertial>
+      <origin xyz="${GRIP_LEN/2} 0 0" rpy="0 0 0"/>
+      <mass value="0.05"/>
+      <inertia
+        ixx="0.0000033" ixy="0.0" ixz="0.0"
+        iyy="0.0000433" iyz="0.0"
+        izz="0.0000433"/>
+    </inertial>
+  </link>
+
+  <joint name="gripper_joint_mirror" type="prismatic">
+    <parent link="gripper_base"/>
+    <child link="finger_right"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+    <axis xyz="0 -1 0"/>
+    <limit lower="0.0" upper="0.04" effort="10" velocity="0.2"/>
+    <dynamics damping="0.5" friction="0.1"/>
+  </joint>
+
+  <!-- ===================== ROS2 CONTROL ===================== -->
+
+  <ros2_control name="GazeboSystem" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+
+    <joint name="joint1">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="joint2">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="joint3">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="gripper_joint">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+
+    <joint name="gripper_joint_mirror">
+      <command_interface name="position"/>
+      <state_interface name="position"/>
+      <state_interface name="velocity"/>
+    </joint>
+  </ros2_control>
+
+  <!-- ===================== GAZEBO ===================== -->
+
+  <gazebo>
+    <plugin name="gazebo_ros2_control" filename="libgazebo_ros2_control.so">
+      <robot_param>robot_description</robot_param>
+      <parameters>$(find arm_digital_twin)/config/controllers.yaml</parameters>
+    </plugin>
+  </gazebo>
+
+</robot>

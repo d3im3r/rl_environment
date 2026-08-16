@@ -1,0 +1,28 @@
+# Python / PyTorch / ROS 2 artifacts
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.pth
+*.pt
+*.onnx
+
+# Data logs and runs
+train_runs/
+eval_runs/
+log/
+*.csv
+*.tar.xz
+*.zip
+*.log
+
+# ROS 2 build artifacts
+build/
+install/
+log/
+.clang-format
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/

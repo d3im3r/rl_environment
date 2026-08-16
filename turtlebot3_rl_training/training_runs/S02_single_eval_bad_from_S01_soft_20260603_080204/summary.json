@@ -1,0 +1,22 @@
+{
+    "training_id": "stage_2_single_2026_06_03_080204",
+    "scenario_name": "",
+    "scenario_config": "",
+    "scenario_copy": "",
+    "stage": 2,
+    "goal_mode": "single",
+    "best_score": 335.1333210133183,
+    "episodes_requested": 20,
+    "episodes_completed": 20,
+    "run_dir": "/home/d3im3r/ros2_ws/src/turtlebot3_rl_training/training_runs/stage_2_single_2026_06_03_080204",
+    "record_bags": false,
+    "save_videos": true,
+    "save_gif": false,
+    "resume_checkpoint": "/home/d3im3r/ros2_ws/src/turtlebot3_rl_training/training_runs/S01_soft_valid_20260602_203604/checkpoints/final_model.pth",
+    "load_optimizer": false,
+    "sync_target_on_resume": true,
+    "eval_only": false,
+    "postprocess_completed": true,
+    "plots_generated": true,
+    "videos_checked": true
+}
