@@ -835,7 +835,7 @@ def main():
     state_dim = 5
     action_dim = 3
 
-    epsilon = args.epsilon_start
+    epsilon = 0.0 if args.eval_only else args.epsilon_start
 
     scenario_name = scenario.get("scenario_name", "") if scenario else ""
 
@@ -1080,7 +1080,10 @@ def main():
             timeout = False
             steps = 0
 
-            q_network.train()
+            if args.eval_only:
+                q_network.eval()
+            else:
+                q_network.train()
 
             for step in range(max_steps):
                 action = select_action(
@@ -1135,7 +1138,8 @@ def main():
                 target_network.load_state_dict(q_network.state_dict())
                 target_network.eval()
 
-            epsilon = max(args.epsilon_end, epsilon * args.epsilon_decay)
+            if not args.eval_only:
+                epsilon = max(args.epsilon_end, epsilon * args.epsilon_decay)
 
             avg_loss = total_loss / loss_count if loss_count > 0 else 0.0
 
