@@ -92,8 +92,9 @@ class RLEpisodeManager(Node):
                     f'{model_name} moved to x={x:.2f}, y={y:.2f}, yaw={yaw:.2f}'
                 )
             else:
+                msg = getattr(future.result(), 'status_message', 'SetEntityState returned success=False')
                 self.get_logger().warn(
-                    f'Failed to move {model_name}: {future.result().status_message}'
+                    f'Failed to move {model_name}: {msg}'
                 )
         else:
             self.get_logger().error(f'Service call failed for {model_name}')

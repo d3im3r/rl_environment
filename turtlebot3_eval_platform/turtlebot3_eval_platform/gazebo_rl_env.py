@@ -204,7 +204,8 @@ class GazeboTurtleBot3Env(Node):
         if result is None:
             self.get_logger().error(f"Fallo crítico al llamar /gazebo/set_entity_state para {name}")
         elif not result.success:
-            self.get_logger().warn(f"No se pudo mover la entidad {name}: {result.status_message}")
+            msg = getattr(result, 'status_message', 'SetEntityState returned success=False')
+            self.get_logger().warn(f"No se pudo mover la entidad {name}: {msg}")
         else:
             self.get_logger().info(f"Entidad {name} reposicionada con éxito a ({x:.2f}, {y:.2f})")
 

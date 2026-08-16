@@ -415,8 +415,9 @@ class GazeboTurtleBot3Env(Node):
             raise RuntimeError(f'Failed to move entity: {model_name}')
 
         if not result.success:
+            msg = getattr(result, 'status_message', 'SetEntityState service returned success=False')
             raise RuntimeError(
-                f'Failed to move entity {model_name}: {result.status_message}'
+                f'Failed to move entity {model_name}: {msg}'
             )
 
         self.spin_some(0.1)
