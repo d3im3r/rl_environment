@@ -178,7 +178,10 @@ def parse_args(args=None):
 
     parser.add_argument(
         "--eval-only",
-        action="store_true",
+        type=str2bool,
+        nargs="?",
+        const=True,
+        default=False,
         help=(
             "Run episodes without training updates. "
             "Useful to test a checkpoint deterministically."
