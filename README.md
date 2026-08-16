@@ -167,21 +167,36 @@ Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d
 
 ## 🎯 Modos de Metas Dinámicas (`goal_mode`)
 
-El argumento `goal_mode` controla cómo se seleccionan las coordenadas de la meta $(x_{\text{goal}}, y_{\text{goal}})$ al inicio de cada episodio:
+El argumento `goal_mode` controla cómo se seleccionan las coordenadas de la meta $(x_{\text{goal}}, y_{\text{goal}})$ y las posiciones iniciales del robot al inicio de cada episodio:
 
 ```text
-                     [ MODO MEDIUM EN STAGE 2 ]
-                        Meta 2: (1.2, 0.8)
+                     [ MODO MEDIUM EN STAGE 1 & 2 ]
+                        Meta 2: (1.4, +0.45)
                               \
-   [Robot: -1.5, 0.0] ---> [ OBSTÁCULO ] ---> Meta 1: (1.5, 0.0)
+   [Robot: -1.5, 0.0] ---> [ ARENA / OBSTÁCULO ] ---> Meta 1: (1.5, 0.0)
                               /
-                        Meta 3: (1.2, -0.8)
+                        Meta 3: (1.4, -0.45)
+
+                     [ MODO SEPARATED (BENCHMARKING & GENERALIZACIÓN) ]
+     Start 2: (-1.5, +0.50) ---------------------> Meta 2: (+1.2, +0.80)
+                                  \
+     Start 1: (-1.5,  0.00) ---------> ARENA ----> Meta 1: (+1.5,  0.00)
+                                  /
+     Start 3: (-1.5, -0.50) ---------------------> Meta 3: (+1.2, -0.80)
 ```
 
-1. **`single`**: Meta fija frontal `(1.5, 0.0)`. Recomendado únicamente para verificar la convergencia inicial del gradiente en línea recta.
-2. **`soft`**: Variaciones laterales moderadas `[(1.5, 0.0), (1.5, 0.25), (1.5, -0.25)]`. Enseña a la red a tolerar desviaciones leves.
-3. **`medium`**: Metas distribuidas a la izquierda y derecha detrás de obstáculos `[(1.5, 0.0), (1.2, 0.8), (1.2, -0.8)]`. **Obliga al robot a aprender a esquivar por la izquierda o por la derecha según la ubicación de la meta.**
-4. **`separated`**: Matriz multizona de orígenes y metas para entrenamiento generalizado y benchmarking riguroso.
+1. **`single`**: Meta fija frontal `(1.5, 0.0)` con origen fijo `(-1.5, 0.0)`. Recomendado únicamente para verificar la convergencia inicial del gradiente en línea recta.
+2. **`soft`**: Variaciones laterales moderadas `[(1.5, 0.0), (1.5, 0.25), (1.5, -0.25)]`. Enseña a la red a tolerar desviaciones leves de trayectoria.
+3. **`medium`**: Metas distribuidas en el corredor central `[(1.5, 0.0), (1.4, 0.45), (1.4, -0.45)]`. **Modo estándar recomendado para entrenamiento principal y aprendizaje de maniobras eficientes.**
+4. **`separated`**: Matriz multizona de orígenes `[(-1.5, 0.0), (-1.5, 0.5), (-1.5, -0.5)]` y metas dispersas `[(1.5, 0.0), (1.2, 0.8), (1.2, -0.8)]`.
+
+---
+
+### 🧪 ¿Por qué es fundamental evaluar con `separated`?
+
+* **Generalización Multizona (Invariancia de Origen y Meta)**: Mientras que `medium` mantiene al robot iniciando siempre en el centro exacto `(-1.5, 0.0)` con metas en el corredor central, `separated` varía simultáneamente tanto el **origen de partida** como la **ubicación del objetivo**.
+* **Validación de Inteligencia Vectorial**: Evaluar el modelo en `separated` somete a la red a combinaciones de inicio y meta que **nunca presenció juntas durante el entrenamiento**.
+* Si el agente obtiene una alta tasa de éxito ($>80\%$) en `separated`, se demuestra científicamente que la red neuronal **no memorizó trayectorias fijas**, sino que aprendió **inteligencia geométrica espacial condicional** ($\theta_{\text{error}} = \text{atan2}(dy, dx) - \text{yaw}$) navegando con éxito desde cualquier origen hacia cualquier coordenada del mapa.
 
 ---
 
