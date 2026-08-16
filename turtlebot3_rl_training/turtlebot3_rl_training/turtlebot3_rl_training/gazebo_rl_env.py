@@ -599,7 +599,7 @@ class GazeboTurtleBot3Env(Node):
             if d_front_next < 0.30:
                 reward -= 1.5 * (0.30 - d_front_next)
 
-        elif action == 1:
+        elif action in (1, 3):
             # Si hay obstáculo al frente (< 1.05m), premiar el giro de evitación y eximir penalización innecesaria
             if d_front_next < 0.30:
                 reward += 0.30
@@ -613,7 +613,7 @@ class GazeboTurtleBot3Env(Node):
             elif goal_right:
                 reward -= self.reward_wrong_turn_penalty * theta_next
 
-        elif action == 2:
+        elif action in (2, 4):
             # Si hay obstáculo al frente (< 1.05m), premiar el giro de evitación y eximir penalización innecesaria
             if d_front_next < 0.30:
                 reward += 0.30
@@ -638,8 +638,8 @@ class GazeboTurtleBot3Env(Node):
         # ------------------------------------------------------------
         if previous_action is not None:
             if (
-                (previous_action == 1 and action == 2)
-                or (previous_action == 2 and action == 1)
+                (previous_action in (1, 3) and action in (2, 4))
+                or (previous_action in (2, 4) and action in (1, 3))
             ):
                 reward -= self.reward_oscillation_penalty
 
