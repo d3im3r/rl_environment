@@ -14,16 +14,17 @@ El sistema integra un entorno de aprendizaje estilo OpenAI Gym acoplado directam
 ## 📋 Tabla de Contenidos
 1. [Resumen General del Proyecto](#-resumen-general-del-proyecto)
 2. [Estructura Completa del Repositorio](#-estructura-completa-del-repositorio)
-3. [Espacio de Estados y de Acciones](#-espacio-de-estados-y-de-acciones)
-4. [Formulación Matemática de la Recompensa (Reward Shaping)](#-formulación-matemática-de-la-recompensa-reward-shaping)
-5. [Distancias Físicas y Umbrales Calibrados](#-distancias-físicas-y-umbrales-calibrados)
-6. [Modos de Metas Dinámicas (`goal_mode`)](#-modos-de-metas-dinámicas-goal_mode)
-7. [Mecanismo de Reinicio de Score en Transfer Learning](#-mecanismo-de-reinicio-de-score-en-transfer-learning)
-8. [Requisitos e Instalación](#-requisitos-e-instalación)
-9. [Guía Exhaustiva de Entrenamiento (`train_dqn_stage.launch.py`)](#-guía-exhaustiva-de-entrenamiento-train_dqn_stagelaunchpy)
-10. [Guía Exhaustiva de Benchmarking (`benchmark.launch.py`)](#-guía-exhaustiva-de-benchmarking-benchmarklaunchpy)
-11. [Sistema de Registro de Datos e Historiales (Logs)](#-sistema-de-registro-de-datos-e-historiales-logs)
-12. [Diagnóstico y Solución de Problemas](#-diagnóstico-y-solución-de-problemas)
+3. [Escenarios de Simulación y Curriculum Learning (Stages 0 a 7)](#-escenarios-de-simulación-y-curriculum-learning-stages-0-a-7)
+4. [Espacio de Estados y de Acciones](#-espacio-de-estados-y-de-acciones)
+5. [Formulación Matemática de la Recompensa (Reward Shaping)](#-formulación-matemática-de-la-recompensa-reward-shaping)
+6. [Distancias Físicas y Umbrales Calibrados](#-distancias-físicas-y-umbrales-calibrados)
+7. [Modos de Metas Dinámicas (`goal_mode`)](#-modos-de-metas-dinámicas-goal_mode)
+8. [Mecanismo de Reinicio de Score en Transfer Learning](#-mecanismo-de-reinicio-de-score-en-transfer-learning)
+9. [Requisitos e Instalación](#-requisitos-e-instalación)
+10. [Guía Exhaustiva de Entrenamiento (`train_dqn_stage.launch.py`)](#-guía-exhaustiva-de-entrenamiento-train_dqn_stagelaunchpy)
+11. [Guía Exhaustiva de Benchmarking (`benchmark.launch.py`)](#-guía-exhaustiva-de-benchmarking-benchmarklaunchpy)
+12. [Sistema de Registro de Datos e Historiales (Logs)](#-sistema-de-registro-de-datos-e-historiales-logs)
+13. [Diagnóstico y Solución de Problemas](#-diagnóstico-y-solución-de-problemas)
 
 ---
 
@@ -77,6 +78,23 @@ rl_environment/
         ├── d3im3r_stage_02_front_obstacle.world # Stage 2: Obstáculo central frontal
         └── ...                         # Stages 3 a 7: Múltiples obstáculos y laberintos
 ```
+
+---
+
+## 🏛️ Escenarios de Simulación y Curriculum Learning (Stages 0 a 7)
+
+La plataforma cuenta con 8 escenarios progresivos en Gazebo Classic (`d3im3r_stage_XX.world`) diseñados para la técnica de **Curriculum Learning**, permitiendo transferir conocimientos desde tareas simples de persecución de metas hasta navegación autónoma en laberintos:
+
+| Etapa (`stage`) | Archivo `.world` | Dificultad | Obstáculos | Objetivo de Aprendizaje Físico |
+| :---: | :--- | :---: | :---: | :--- |
+| **Stage 0** | `d3im3r_stage_00_empty.world` | Mínima | $0$ | Verificación de odometría, tópicos ROS 2 y calibración de velocidades continuas. |
+| **Stage 1** | `d3im3r_stage_01_direct_goal.world` | Baja | $0$ | **Navegación en Línea Recta**: Aprendizaje de alineación angular $\theta_{\text{goal}}$ y reducción de distancia. |
+| **Stage 2** | `d3im3r_stage_02_front_obstacle.world` | Media | $1$ | **Evitación Frontal Directa**: Esquivar obstáculo cúbico central ($x=0.0$) bordear por izquierda/derecha. |
+| **Stage 3** | `d3im3r_stage_03_left_right_choice.world` | Media-Alta | $2$ | **Bifurcación y Elección de Paso**: Tomar decisiones de viraje frente a un pasadizo flanqueado por dos bloques. |
+| **Stage 4** | `d3im3r_stage_04_corridor.world` | Alta | $2$ paredes | **Centrado en Corredor**: Mantenimiento de rumbo longitudinal en un pasillo estrecho de $3.6\text{ m}$ sin oscilar. |
+| **Stage 5** | `d3im3r_stage_05_narrow_door.world` | Alta | 3 barreras | **Navegación en Chicane / Puertas**: Ejecución de maniobras complejas en 'S' a través de aperturas desalineadas. |
+| **Stage 6** | `d3im3r_stage_06_random_obstacles.world` | Muy Alta | $4$ bloques | **Evitación Multirrumbo Asimétrica**: Navegación reactiva continua evitando múltiples obstáculos en cuadrantes. |
+| **Stage 7** | `d3im3r_stage_07_simple_maze.world` | Máxima | Laberinto | **Planificación Local y Laberinto**: Negociación de esquinas cerradas y muros en 'L' con giros ciegos a $90^\circ$. |
 
 ---
 
