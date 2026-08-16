@@ -580,7 +580,7 @@ class GazeboTurtleBot3Env(Node):
         badly_misaligned = theta_next >= self.bad_heading_threshold
 
         d_front_next = float(next_state[0])
-        obstacle_shaping_threshold = 0.20  # 0.70m reales para evitación de obstáculos cercana
+        obstacle_shaping_threshold = 0.35 if self.stage >= 2 else 0.20  # 1.22m en Stage 2+, 0.70m en Stage 1
 
         if action == 0:
             # Solo otorgar bono de alineación si NO hay obstáculo cercano al frente (< 0.70m / norm 0.20)
