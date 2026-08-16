@@ -210,13 +210,17 @@ sudo apt install -y \
     ros-humble-turtlebot3-gazebo \
     ros-humble-turtlebot3-simulations \
     ros-humble-turtlebot3-description \
-    ros-humble-gazebo-ros-pkgs
+    ros-humble-gazebo-ros-pkgs \
+    python3-pip
+
+# 2. Instalación de PyTorch y librerías de Inteligencia Artificial / Análisis
+pip3 install torch torchvision numpy pandas matplotlib
 
 # Configurar modelo por defecto en bashrc
 echo "export TURTLEBOT3_MODEL=burger" >> ~/.bashrc
 export TURTLEBOT3_MODEL=burger
 
-# 2. Crear e ingresar al workspace de ROS 2
+# 3. Crear e ingresar al workspace de ROS 2
 mkdir -p ~/ros2_ws/src
 cd ~/ros2_ws/src
 
