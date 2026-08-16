@@ -580,10 +580,10 @@ class GazeboTurtleBot3Env(Node):
         badly_misaligned = theta_next >= self.bad_heading_threshold
 
         d_front_next = float(next_state[0])
-        obstacle_shaping_threshold = 0.45  # 1.58m reales para iniciar evitación anticipada
+        obstacle_shaping_threshold = 0.20  # 0.70m reales para evitación de obstáculos cercana
 
         if action == 0:
-            # Solo otorgar bono de alineación si NO hay obstáculo cercano al frente (< 1.58m / norm 0.45)
+            # Solo otorgar bono de alineación si NO hay obstáculo cercano al frente (< 0.70m / norm 0.20)
             if aligned and d_front_next >= obstacle_shaping_threshold:
                 reward += self.reward_forward_aligned_bonus
             else:
@@ -592,12 +592,12 @@ class GazeboTurtleBot3Env(Node):
             if badly_misaligned:
                 reward -= self.reward_forward_misaligned_penalty
 
-            # Penalización por insistir en avanzar recto hacia un obstáculo cercano (< 1.58m / norm 0.45)
+            # Penalización por insistir en avanzar recto hacia un obstáculo cercano (< 0.70m / norm 0.20)
             if d_front_next < obstacle_shaping_threshold:
                 reward -= 1.5 * (obstacle_shaping_threshold - d_front_next)
 
         elif action in (1, 3):
-            # Si hay obstáculo al frente (< 1.58m), premiar el giro de evitación y eximir penalización innecesaria
+            # Si hay obstáculo al frente (< 0.70m), premiar el giro de evitación y eximir penalización innecesaria
             if d_front_next < obstacle_shaping_threshold:
                 reward += 0.30
             else:
@@ -611,7 +611,7 @@ class GazeboTurtleBot3Env(Node):
                 reward -= self.reward_wrong_turn_penalty * theta_next
 
         elif action in (2, 4):
-            # Si hay obstáculo al frente (< 1.58m), premiar el giro de evitación y eximir penalización innecesaria
+            # Si hay obstáculo al frente (< 0.70m), premiar el giro de evitación y eximir penalización innecesaria
             if d_front_next < obstacle_shaping_threshold:
                 reward += 0.30
             else:
