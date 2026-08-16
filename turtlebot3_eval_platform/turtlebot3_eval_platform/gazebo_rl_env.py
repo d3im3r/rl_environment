@@ -17,11 +17,7 @@ from gazebo_msgs.msg import EntityState
 
 
 def normalize_angle(angle: float) -> float:
-    while angle > math.pi:
-        angle -= 2.0 * math.pi
-    while angle < -math.pi:
-        angle += 2.0 * math.pi
-    return angle
+    return math.atan2(math.sin(angle), math.cos(angle))
 
 
 def yaw_to_quaternion(yaw: float) -> Quaternion:
