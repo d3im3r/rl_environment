@@ -51,6 +51,7 @@ rl_environment/
 │   │   └── rl_env_stage.launch.py      # Launch file secundario para el entorno de simulación
 │   └── turtlebot3_rl_training/
 │       ├── train_dqn_ros.py            # Bucle de entrenamiento DQN, Replay Buffer y optimizador
+│       ├── evaluate_dqn_ros.py         # Script delgado ejecutable para evaluación directa de modelos DQN
 │       ├── gazebo_rl_env.py            # Entorno Gym ROS 2 y formulación de recompensa (Reward Shaping)
 │       ├── rl_interface_node.py        # Nodo suscriptor de LiDAR/Odom y publicador del estado 5D
 │       ├── rl_motion_controller.py     # Nodo ejecutor de velocidades en /cmd_vel (10 Hz)
@@ -280,6 +281,21 @@ ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
 | `batch_size` | `int` | `64` | `64`, `128` | Tamaño del lote de transiciones extraídas del Replay Buffer. |
 | `eval_every` | `int` | `25` | `25` | Frecuencia (en episodios) para evaluar la política con $\epsilon = 0.0$. |
 | `base_dir` | `string` | `.../train_runs` | Ruta absoluta | Directorio raíz para guardar logs, métricas y checkpoints. |
+
+---
+
+### 🔍 Evaluación Directa de Políticas (`evaluate_dqn_ros`)
+
+Para evaluar un modelo pre-entrenado directamente sin actualizar gradientes ($\epsilon = 0.0$ determinista), se puede invocar la herramienta `evaluate_dqn_ros`:
+
+```bash
+ros2 run turtlebot3_rl_training evaluate_dqn_ros \
+    --stage 2 \
+    --goal-mode medium \
+    --resume-checkpoint /home/d3im3r/ros2_ws/src/train_runs/stage_2_medium_2026_08_16_112449/checkpoints/best_model.pth \
+    --episodes 10 \
+    --max-steps 80
+```
 
 ---
 
