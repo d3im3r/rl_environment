@@ -165,38 +165,60 @@ Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d
 
 ---
 
-## 🎯 Modos de Metas Dinámicas (`goal_mode`)
+## 🎯 Modos de Posicionamiento de Metas (`goal_mode`)
 
-El argumento `goal_mode` controla cómo se seleccionan las coordenadas de la meta $(x_{\text{goal}}, y_{\text{goal}})$ y las posiciones iniciales del robot al inicio de cada episodio:
+### ¿Qué es `goal_mode`?
+En Gazebo, el robot inicia en el lado izquierdo del mapa y debe navegar hasta alcanzar un **cilindro verde (la meta)**. El parámetro `goal_mode` define **en qué coordenadas $(X, Y)$ del mapa aparece ese cilindro verde** y desde qué posición parte el robot al inicio de cada episodio.
 
-```text
-                     [ MODO MEDIUM EN STAGE 1 & 2 ]
-                        Meta 2: (1.4, +0.45)
-                              \
-   [Robot: -1.5, 0.0] ---> [ ARENA / OBSTÁCULO ] ---> Meta 1: (1.5, 0.0)
-                              /
-                        Meta 3: (1.4, -0.45)
-
-                     [ MODO SEPARATED (BENCHMARKING & GENERALIZACIÓN) ]
-     Start 2: (-1.5, +0.50) ---------------------> Meta 2: (+1.2, +0.80)
-                                  \
-     Start 1: (-1.5,  0.00) ---------> ARENA ----> Meta 1: (+1.5,  0.00)
-                                  /
-     Start 3: (-1.5, -0.50) ---------------------> Meta 3: (+1.2, -0.80)
-```
-
-1. **`single`**: Meta fija frontal `(1.5, 0.0)` con origen fijo `(-1.5, 0.0)`. Recomendado únicamente para verificar la convergencia inicial del gradiente en línea recta.
-2. **`soft`**: Variaciones laterales moderadas `[(1.5, 0.0), (1.5, 0.25), (1.5, -0.25)]`. Enseña a la red a tolerar desviaciones leves de trayectoria.
-3. **`medium`**: Metas distribuidas en el corredor central `[(1.5, 0.0), (1.4, 0.45), (1.4, -0.45)]`. **Modo estándar recomendado para entrenamiento principal y aprendizaje de maniobras eficientes.**
-4. **`separated`**: Matriz multizona de orígenes `[(-1.5, 0.0), (-1.5, 0.5), (-1.5, -0.5)]` y metas dispersas `[(1.5, 0.0), (1.2, 0.8), (1.2, -0.8)]`.
+Cumple dos objetivos fundamentales:
+1. **Durante el Entrenamiento**: Evita que el robot memorice una sola ruta recta fija y lo obliga a aprender a orientarse a distintas direcciones.
+2. **Durante la Evaluación**: Permite verificar si el robot realmente aprendió a navegar hacia cualquier punto del mapa (generalización) o si solo memorizó un camino.
 
 ---
 
-### 🧪 ¿Por qué es fundamental evaluar con `separated`?
+### 📌 Resumen Práctico de los 4 Modos
 
-* **Generalización Multizona (Invariancia de Origen y Meta)**: Mientras que `medium` mantiene al robot iniciando siempre en el centro exacto `(-1.5, 0.0)` con metas en el corredor central, `separated` varía simultáneamente tanto el **origen de partida** como la **ubicación del objetivo**.
-* **Validación de Inteligencia Vectorial**: Evaluar el modelo en `separated` somete a la red a combinaciones de inicio y meta que **nunca presenció juntas durante el entrenamiento**.
-* Si el agente obtiene una alta tasa de éxito ($>80\%$) en `separated`, se demuestra científicamente que la red neuronal **no memorizó trayectorias fijas**, sino que aprendió **inteligencia geométrica espacial condicional** ($\theta_{\text{error}} = \text{atan2}(dy, dx) - \text{yaw}$) navegando con éxito desde cualquier origen hacia cualquier coordenada del mapa.
+| Modo | Ubicación de la Meta $(X, Y)$ | Punto de Salida del Robot | Uso Recomendado |
+| :--- | :--- | :--- | :--- |
+| **`single`** | Meta fija al centro `(1.5, 0.0)` | Fijo `(-1.5, 0.0)` | Validaciones iniciales de línea recta. |
+| **`soft`** | Metas cercanas al centro `(y = ±0.25)` | Fijo `(-1.5, 0.0)` | Pruebas de desviaciones leves. |
+| **`medium`** | Metas en el corredor central `(y = ±0.45)` | Fijo `(-1.5, 0.0)` | **⭐ RECOMENDADO PARA ENTRENAR** |
+| **`separated`** | Metas dispersas en esquinas lejanas `(y = ±0.80)` | 3 Orígenes `(y = 0.0, ±0.5)` | **⭐ RECOMENDADO PARA EVALUAR** |
+
+---
+
+### 🗺️ Comparación Gráfica: `medium` vs `separated`
+
+#### 🟢 Modo `medium` (Usado para Entrenar)
+El robot **siempre sale del mismo punto central** `(-1.5, 0.0)` y busca metas dentro del pasillo central:
+```text
+  +-----------------------------------+
+  |                                   |
+  |             [Meta 2: (1.4, +0.45)]|
+  |  [Robot] -> [Meta 1: (1.5,  0.00)]|  <-- Corredor central
+  |             [Meta 3: (1.4, -0.45)]|
+  |                                   |
+  +-----------------------------------+
+```
+
+#### 🔵 Modo `separated` (Usado para Evaluar)
+Tanto el **punto de salida del robot** como la **posición de la meta** cambian entre episodios, probando las esquinas lejanas del mapa:
+```text
+  +-----------------------------------+
+  |  [Salida 2]         [Meta 2: (1.2, +0.80)]
+  |                                   |
+  |  [Salida 1] ------> [Meta 1: (1.5,  0.00)]  <-- Esquinas y laterales
+  |                                   |
+  |  [Salida 3]         [Meta 3: (1.2, -0.80)]
+  +-----------------------------------+
+```
+
+---
+
+### 🧪 ¿Por qué evaluar con `separated` tras entrenar con `medium`?
+
+* **Prueba de Fuego (Generalización)**: En `medium`, el robot solo vio metas centradas. En `separated`, la meta aparece en esquinas lejanas y el robot parte desde distintos puntos laterales.
+* **¿Qué demuestra un buen resultado?**: Si el robot obtiene >80% de éxito en `separated`, se demuestra científicamente que la red neuronal **no memorizó un camino fijo**, sino que **aprendió a navegar verdaderamente hacia cualquier coordenada del plano**.
 
 ---
 
