@@ -1,7 +1,8 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, RegisterEventHandler, Shutdown
+from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.conditions import IfCondition
@@ -82,25 +83,32 @@ def generate_launch_description():
         }.items()
     )
 
+    benchmark_action = Node(
+        package='turtlebot3_eval_platform',
+        executable='benchmark',
+        name='benchmark_runner',
+        output='screen',
+        arguments=[
+            '--agent', LaunchConfiguration('agent'),
+            '--model-path', LaunchConfiguration('model_path'),
+            '--stage', LaunchConfiguration('stage'),
+            '--episodes', LaunchConfiguration('episodes'),
+            '--max-steps', LaunchConfiguration('max_steps'),
+            '--csv-path', LaunchConfiguration('csv_path'),
+        ]
+    )
+
     # Nodo del runner de benchmarking (con retardo para dar tiempo a Gazebo si se lanza)
     benchmark_node = TimerAction(
         period=5.0,
-        actions=[
-            Node(
-                package='turtlebot3_eval_platform',
-                executable='benchmark',
-                name='benchmark_runner',
-                output='screen',
-                arguments=[
-                    '--agent', LaunchConfiguration('agent'),
-                    '--model-path', LaunchConfiguration('model_path'),
-                    '--stage', LaunchConfiguration('stage'),
-                    '--episodes', LaunchConfiguration('episodes'),
-                    '--max-steps', LaunchConfiguration('max_steps'),
-                    '--csv-path', LaunchConfiguration('csv_path'),
-                ]
-            )
-        ]
+        actions=[benchmark_action]
+    )
+
+    shutdown_handler = RegisterEventHandler(
+        OnProcessExit(
+            target_action=benchmark_action,
+            on_exit=[Shutdown()]
+        )
     )
 
     return LaunchDescription([
@@ -114,4 +122,5 @@ def generate_launch_description():
         launch_gazebo_arg,
         world_launch,
         benchmark_node,
+        shutdown_handler,
     ])

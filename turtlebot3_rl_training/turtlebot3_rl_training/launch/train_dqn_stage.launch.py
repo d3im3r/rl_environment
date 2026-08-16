@@ -1,7 +1,8 @@
 import os
 
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription, TimerAction, RegisterEventHandler, Shutdown
+from launch.event_handlers import OnProcessExit
 from launch.substitutions import LaunchConfiguration
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 
@@ -165,29 +166,36 @@ def generate_launch_description():
         ]
     )
 
+    train_action = Node(
+        package='turtlebot3_rl_training',
+        executable='train_dqn_ros',
+        name='train_dqn_ros',
+        output='screen',
+        emulate_tty=True,
+        arguments=[
+            '--stage', LaunchConfiguration('stage'),
+            '--goal-mode', LaunchConfiguration('goal_mode'),
+            '--episodes', LaunchConfiguration('episodes'),
+            '--max-steps', LaunchConfiguration('max_steps'),
+            '--batch-size', LaunchConfiguration('batch_size'),
+            '--learning-rate', LaunchConfiguration('learning_rate'),
+            '--epsilon-decay', LaunchConfiguration('epsilon_decay'),
+            '--epsilon-start', LaunchConfiguration('epsilon_start'),
+            '--resume-checkpoint', LaunchConfiguration('resume_checkpoint'),
+            '--base-dir', LaunchConfiguration('base_dir')
+        ]
+    )
+
     train_node = TimerAction(
         period=6.0,
-        actions=[
-            Node(
-                package='turtlebot3_rl_training',
-                executable='train_dqn_ros',
-                name='train_dqn_ros',
-                output='screen',
-                emulate_tty=True,
-                arguments=[
-                    '--stage', LaunchConfiguration('stage'),
-                    '--goal-mode', LaunchConfiguration('goal_mode'),
-                    '--episodes', LaunchConfiguration('episodes'),
-                    '--max-steps', LaunchConfiguration('max_steps'),
-                    '--batch-size', LaunchConfiguration('batch_size'),
-                    '--learning-rate', LaunchConfiguration('learning_rate'),
-                    '--epsilon-decay', LaunchConfiguration('epsilon_decay'),
-                    '--epsilon-start', LaunchConfiguration('epsilon_start'),
-                    '--resume-checkpoint', LaunchConfiguration('resume_checkpoint'),
-                    '--base-dir', LaunchConfiguration('base_dir')
-                ]
-            )
-        ]
+        actions=[train_action]
+    )
+
+    shutdown_handler = RegisterEventHandler(
+        OnProcessExit(
+            target_action=train_action,
+            on_exit=[Shutdown()]
+        )
     )
 
     return LaunchDescription([
@@ -210,4 +218,5 @@ def generate_launch_description():
         rl_interface_node,
         rl_motion_controller,
         train_node,
+        shutdown_handler,
     ])
