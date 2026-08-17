@@ -580,11 +580,15 @@ class GazeboTurtleBot3Env(Node):
         badly_misaligned = theta_next >= self.bad_heading_threshold
 
         d_front_next = float(next_state[0])
+        d_left_next = float(next_state[1])
+        d_right_next = float(next_state[2])
+        d_min_obs = min(d_front_next, d_left_next, d_right_next)
+
         obstacle_shaping_threshold = 0.35 if self.stage >= 2 else 0.20  # 1.22m en Stage 2+, 0.70m en Stage 1
 
         if action == 0:
-            # Solo otorgar bono de alineación si NO hay obstáculo cercano al frente (< 0.70m / norm 0.20)
-            if aligned and d_front_next >= obstacle_shaping_threshold:
+            # Solo otorgar bono de alineación si NO hay obstáculo cercano al frente o laterales (< 1.22m norm 0.35)
+            if aligned and d_min_obs >= obstacle_shaping_threshold:
                 reward += self.reward_forward_aligned_bonus
             else:
                 reward -= self.reward_forward_misaligned_penalty * theta_next
@@ -592,13 +596,13 @@ class GazeboTurtleBot3Env(Node):
             if badly_misaligned:
                 reward -= self.reward_forward_misaligned_penalty
 
-            # Penalización por insistir en avanzar recto hacia un obstáculo cercano (< 0.70m / norm 0.20)
-            if d_front_next < obstacle_shaping_threshold:
-                reward -= 1.5 * (obstacle_shaping_threshold - d_front_next)
+            # Penalización por insistir en avanzar recto hacia un obstáculo cercano
+            if d_min_obs < obstacle_shaping_threshold:
+                reward -= 1.5 * (obstacle_shaping_threshold - d_min_obs)
 
         elif action in (1, 3):
-            # Si hay obstáculo al frente (< 0.70m), premiar el giro de evitación y eximir penalización innecesaria
-            if d_front_next < obstacle_shaping_threshold:
+            # Si hay obstáculo cercano al frente o diagonales, premiar el giro de evitación
+            if d_min_obs < obstacle_shaping_threshold:
                 reward += 0.30
             else:
                 reward -= self.reward_turn_penalty
@@ -611,8 +615,8 @@ class GazeboTurtleBot3Env(Node):
                 reward -= self.reward_wrong_turn_penalty * theta_next
 
         elif action in (2, 4):
-            # Si hay obstáculo al frente (< 0.70m), premiar el giro de evitación y eximir penalización innecesaria
-            if d_front_next < obstacle_shaping_threshold:
+            # Si hay obstáculo cercano al frente o diagonales, premiar el giro de evitación
+            if d_min_obs < obstacle_shaping_threshold:
                 reward += 0.30
             else:
                 reward -= self.reward_turn_penalty
