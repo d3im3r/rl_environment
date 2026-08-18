@@ -611,7 +611,7 @@ class GazeboTurtleBot3Env(Node):
 
             if goal_left:
                 reward += self.reward_correct_turn_bonus * theta_next
-            elif goal_right:
+            elif goal_right and d_min_obs >= obstacle_shaping_threshold:
                 reward -= self.reward_wrong_turn_penalty * theta_next
 
         elif action in (2, 4):
@@ -625,7 +625,7 @@ class GazeboTurtleBot3Env(Node):
 
             if goal_right:
                 reward += self.reward_correct_turn_bonus * theta_next
-            elif goal_left:
+            elif goal_left and d_min_obs >= obstacle_shaping_threshold:
                 reward -= self.reward_wrong_turn_penalty * theta_next
 
         # ------------------------------------------------------------
