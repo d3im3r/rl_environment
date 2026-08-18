@@ -140,12 +140,13 @@ $$R_t = R_{\text{progreso}} + R_{\text{tiempo}} + R_{\text{orientacion}} + R_{\t
 * **Alineación Angular**: Recompensa por mantener el frente orientado hacia la meta:
   $$R_{\text{orientacion}} = -0.30 \times |\theta_{\text{goal}}|$$
 
-### 2. Reward Shaping Reactivo por LiDAR ($R_{\text{shaping}}$):
-Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d_{\text{front}} < 0.45$ ($1.58\text{ metros}$ en métrica real):
-* **Si el agente ejecuta Avance Recto (`Acción 0`) hacia el obstáculo**:
-  $$R_{\text{shaping}} = -1.5 \times (0.45 - d_{\text{front}})$$
-* **Si el agente ejecuta Giros de Evitación (`Acción 1, 2, 3` o `4`)**:
+### 2. Reward Shaping Reactivo por LiDAR Multi-Rayo ($R_{\text{shaping}}$):
+Se calcula evaluando el obstáculo más cercano en un abanico frontal de $90^\circ$ ($d_{\text{min\_obs}} = \min(d_{\text{front}}, d_{\text{left}}, d_{\text{right}})$) con un umbral adaptativo $d_{\text{thresh}}$ ($1.22\text{ m} \ / \ 0.35$ norm en Stage 2+, y $0.70\text{ m} \ / \ 0.20$ norm en Stage 1):
+* **Si el agente ejecuta Avance Recto (`Acción 0`) hacia un obstáculo cercano ($d_{\text{min\_obs}} < d_{\text{thresh}}$)**:
+  $$R_{\text{shaping}} = -1.5 \times (d_{\text{thresh}} - d_{\text{min\_obs}})$$
+* **Si el agente ejecuta Giros de Evitación (`Acción 1, 2, 3` o `4`) con obstáculo cercano ($d_{\text{min\_obs}} < d_{\text{thresh}}$)**:
   $$R_{\text{shaping}} = +0.30$$
+* **Exención de Penalización de Giro Opuesto**: Durante maniobras evasivas ($d_{\text{min\_obs}} < d_{\text{thresh}}$), se desactiva la penalización por "giro contrario a la meta" (`reward_wrong_turn_penalty`), permitiendo rodear cajas laterales libremente.
 
 ### 3. Recompensas Terminales ($R_{\text{terminal}}$):
 * **Éxito (Llegada a Meta, $d_{\text{goal}} \le 0.25\text{ m}$)**: $+\mathbf{150.0}$
@@ -159,9 +160,10 @@ Se activa cuando el obstáculo frontal se detecta a una distancia normalizada $d
 | Métrica del Sistema | Distancia Real en Metros | Valor Normalizado | Interpretación Físico-Robótica |
 | :--- | :---: | :---: | :--- |
 | **Alcance Máximo LiDAR** | $3.50\text{ m}$ | $1.00$ | Límite superior de lectura del sensor láser. |
-| **Inicio de Evitación Anticipada (Shaping)** | **$1.58\text{ m}$** | **$0.45$** | El sensor activa penalizaciones por avance recto e incentiva la iniciación temprana del giro evasivo. |
+| **Shaping Stage 2+ (Multi-Rayo)** | **$1.22\text{ m}$** | **$0.35$** | Monitorea $d_{\text{front}}, d_{\text{left}}, d_{\text{right}}$ a $90^\circ$ para evitar bordes de obstáculos centrales. |
+| **Shaping Stage 1 (Frontal)** | **$0.70\text{ m}$** | **$0.20$** | Umbral de evitación anticipada para paredes en mundos libres de obstáculos. |
 | **Umbral de Colisión (Impacto)** | **$0.35\text{ m}$ ($35\text{ cm}$)** | **$0.10$** | Límite de contacto físico. Detiene el episodio y liquida con $-100.0$. |
-| **Margen de Maniobra Libre** | **$1.23\text{ m}$** | — | Espacio neto suficiente para iniciar arcos de giro suaves antes de aproximarse al impacto. |
+| **Margen de Maniobra Libre** | **$0.87\text{ m}$** | — | Espacio neto suficiente para iniciar arcos de giro suaves antes de aproximarse al impacto. |
 
 ---
 
@@ -309,30 +311,31 @@ ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
     epsilon_decay:=0.995
 ```
 
-#### 2. Fine-Tuning en la Misma Etapa (Cargando `best_model.pth`)
+#### 2. Fine-Tuning en la Misma Etapa (Cargando `best_model.pth` de Stage 2)
 ```bash
 ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
     stage:=2 \
     goal_mode:=medium \
     gui:=true \
     episodes:=150 \
-    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_2_medium_2026_08_16_112449/checkpoints/best_model.pth \
-    epsilon_start:=0.30 \
+    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_2_medium_2026_08_17_174807/checkpoints/best_model.pth \
+    epsilon_start:=0.40 \
+    epsilon_decay:=0.98 \
     learning_rate:=0.0003 \
-    max_steps:=80
+    max_steps:=100
 ```
 
-#### 3. Transferencia de Aprendizaje (Stage 1 Single $\to$ Stage 2 Medium)
+#### 3. Transferencia de Aprendizaje (Stage 1 Medium $\to$ Stage 2 Medium)
 ```bash
 ros2 launch turtlebot3_rl_training train_dqn_stage.launch.py \
     stage:=2 \
     goal_mode:=medium \
     gui:=true \
-    episodes:=200 \
-    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_1_single_2026_08_15_171709/checkpoints/best_model.pth \
+    episodes:=150 \
+    resume_checkpoint:=/home/d3im3r/ros2_ws/src/train_runs/stage_1_medium_2026_08_16_151821/checkpoints/best_model.pth \
     epsilon_start:=0.40 \
-    learning_rate:=0.0005 \
-    max_steps:=80
+    epsilon_decay:=0.99 \
+    max_steps:=100
 ```
 
 #### 4. Entrenamiento Rápido de Alta Velocidad (Sin Ventana Gráfica / Headless)
@@ -406,7 +409,7 @@ ros2 launch turtlebot3_eval_platform benchmark.launch.py \
     episodes:=5 \
     launch_gazebo:=true \
     gui:=true \
-    model_path:=/home/d3im3r/ros2_ws/src/train_runs/stage_2_medium_2026_08_16_112449/checkpoints/best_model.pth
+    model_path:=/home/d3im3r/ros2_ws/src/train_runs/stage_2_medium_2026_08_17_174807/checkpoints/best_model.pth
 ```
 
 #### 2. Evaluación de Agente de Lógica Difusa (Fuzzy Agent)
